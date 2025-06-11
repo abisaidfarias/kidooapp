@@ -1,0 +1,26 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager;
+
+@code {
+	[CascadingParameter]
+	public Task<AuthenticationState>? ClientAuthState { get; set; }
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			await accountService.CreateAdmin();
+			if ((await ClientAuthState!).User.Identity!.IsAuthenticated == true)
+			{
+				NavigationManager.NavigateTo("content/home", false, true);
+			}
+			else
+			{
+				NavigationManager.NavigateTo("account/identity/login", false, true);
+			}
+		}
+		catch 
+		{
+			NavigationManager.NavigateTo("account/identity/login", false, true);
+		}
+	}
+}

@@ -1,0 +1,30 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.collapsible-enter {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.collapsible-enter-active {
+    max-height: 200px; /* ajusta según necesidad */
+}
+
+.collapsible-leave {
+    max-height: 200px;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in;
+}
+
+.collapsible-leave-active {
+    max-height: 0;
+}
+.input {
+    @apply w-full bg-gray-50 border border-gray-300 rounded-md px-4 py-2 focus:ring focus:ring-blue-200;
+}
+.bg-page {
+    @apply bg-[#F5F6FA];
+}

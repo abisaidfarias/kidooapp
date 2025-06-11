@@ -1,0 +1,105 @@
+﻿@code {
+    private bool collapseNavMenu = false;
+    private bool isUserExpanded = true;
+    private bool isSidebarCollapsed = false;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "hidden" : "block";
+
+    private void ToggleNavMenu() => collapseNavMenu = !collapseNavMenu;
+    private void ToggleUserMenu() => isUserExpanded = !isUserExpanded;
+    private void ToggleSidebar() => isSidebarCollapsed = !isSidebarCollapsed;
+    private string GetLogoStyle()
+    {
+        var position = isSidebarCollapsed ? "right 70%" : "center";
+        var scale = isSidebarCollapsed ? "2.5" : "1";
+        return $"object-position: {position}; transform: scale({scale});";
+    }
+}
+
+<nav class="@($"h-screen bg-white shadow-md flex flex-col justify-between font-sans transition-all duration-300 {(isSidebarCollapsed ? "w-20" : "w-64")}")">
+    <div>
+        <!-- Logo y flecha alineada al borde -->
+        <div class="relative border-b px-4 py-2">
+            <div class="relative w-full h-12">
+                <div class="overflow-hidden rounded bg-white absolute left-0 top-0 transition-all duration-300"
+                     style="@($"width: {(isSidebarCollapsed ? "60px" : "160px")}; height: 48px;")">
+                    <img src="images/kidoo-logo.png"
+                         alt="Kidoo Logo"
+                         class="w-full h-full object-cover transition-all duration-300"
+                         style="@($"object-position: {(isSidebarCollapsed ? "right 70%" : "center")}; transform: scale({(isSidebarCollapsed ? "2.5" : "1")});")" />
+                </div>
+
+                <button title="Toggle sidebar"
+                        @onclick="ToggleSidebar"
+                        class="absolute top-1/2 -translate-y-1/2 right-0 text-gray-400 hover:text-blue-600 transition">
+                    <span class="material-symbols-outlined">
+                        @(isSidebarCollapsed ? "arrow_right_alt" : "arrow_left_alt")
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <ul class="@NavMenuCssClass lg:block p-4 text-sm text-gray-800 space-y-2">
+            <li class="@($"uppercase text-xs text-gray-400 mt-2 mb-1 {(isSidebarCollapsed ? "hidden" : "")}")">Main</li>
+            <li>
+                @if (!isSidebarCollapsed)
+                {
+                    <NavLink href="/content/home"
+                             class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 group no-underline"
+                             activeClass="bg-blue-100 text-blue-600 font-semibold no-underline">
+                        <span class="material-symbols-outlined text-base text-gray-400 group-hover:text-blue-600">dashboard</span>
+                        <span class="group-hover:text-blue-600">Dashboard</span>
+                    </NavLink>
+                }
+                else
+                {
+                    <NavLink href="/content/home"
+                             class="flex items-center justify-center px-3 py-2 rounded-lg hover:bg-gray-100 group text-gray-400">
+                        <span class="material-symbols-outlined text-base">dashboard</span>
+                    </NavLink>
+                }
+            </li>
+
+            <li class="@($"uppercase text-xs text-gray-400 mt-4 mb-1 {(isSidebarCollapsed ? "hidden" : "")}")">User</li>
+
+            <li>
+                <button class="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-100 text-gray-700"
+                        @onclick="ToggleUserMenu">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-base text-gray-400">group</span>
+                        <span hidden="@isSidebarCollapsed">User</span>
+                    </div>
+                    <span class="material-symbols-outlined text-sm text-gray-400"
+                          hidden="@isSidebarCollapsed">
+                        @(isUserExpanded ? "remove" : "add")
+                    </span>
+                </button>
+            </li>
+
+            @if (isUserExpanded && !isSidebarCollapsed)
+            {
+                <li class="pl-4">
+                    <NavLink href="/user/list"
+                             class="flex items-center gap-2 px-3 py-1 rounded-md hover:bg-gray-100 group no-underline"
+                             activeClass="bg-blue-100 text-blue-600 font-semibold no-underline">
+                        <span class="material-symbols-outlined text-sm text-gray-400 group-hover:text-blue-600">list</span>
+                        <span class="group-hover:text-blue-600">List Users</span>
+                    </NavLink>
+                </li>
+                <li class="pl-4">
+                    <NavLink href="/user/create"
+                             class="flex items-center gap-2 px-3 py-1 rounded-md hover:bg-gray-100 group no-underline"
+                             activeClass="bg-blue-100 text-blue-600 font-semibold no-underline">
+                        <span class="material-symbols-outlined text-sm text-gray-400 group-hover:text-blue-600">person_add</span>
+                        <span class="group-hover:text-blue-600">Create User</span>
+                    </NavLink>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="px-4 py-4 border-t text-xs text-gray-400 text-center">
+        <span hidden="@isSidebarCollapsed">© 2025 KIDOO</span>
+    </div>
+</nav>
